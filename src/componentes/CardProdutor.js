@@ -1,19 +1,32 @@
-import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useReducer, useMemo } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Stars from "./Stars";
 
+const distanciaEmMetros = (distancia) => {
+  // console.log('distancia', distancia)
+  return `${distancia}m`;
+}
+
 export default function CardProdutor({ nome, imagem, distancia, estrelas }) {
+  // const [selected, setSelected] = useState(false);
+  const [selecionado, toggleSelecionado] = useReducer((sel) => !sel, false);
+
+  const distMetros = useMemo(() => distanciaEmMetros(distancia), [distancia]);
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}
+      // onPress={() => setSelected(oldState => !oldState)}
+      onPress={toggleSelecionado}
+    >
       <Image source={imagem} accessibilityLabel={nome} style={styles.imagem} />
       <View style={styles.content}>
         <View style={styles.leftView}>
           <Text style={styles.title}>{ nome }</Text>
-          <Stars quantidade={estrelas} />
+          <Stars quantidade={estrelas} editavel={selecionado} />
         </View>
-        <Text style={styles.distancia}>{ distancia }</Text>
+        <Text style={styles.distancia}>{distMetros}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
